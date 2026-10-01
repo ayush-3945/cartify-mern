@@ -81,7 +81,7 @@ export const Login = () => {
                 <Stack mt={4} spacing={2} width={is480?"95vw":'28rem'} component={'form'} noValidate onSubmit={handleSubmit(handleLogin)}>
 
                     <motion.div whileHover={{y:-5}}>
-                      <TextField fullWidth {...register("email",{required:"Email is required",pattern:{value:/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,message:"Enter a valid email"}})} placeholder='Email'/>
+                      <TextField fullWidth {...register("email",{required:"Email is required",pattern:{value:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,message:"Enter a valid email"}})} placeholder='Email'/>
                       {errors.email && <FormHelperText sx={{mt:1}} error>{errors.email.message}</FormHelperText>}
                     </motion.div>
 

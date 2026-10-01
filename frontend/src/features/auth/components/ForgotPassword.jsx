@@ -62,7 +62,7 @@ export const ForgotPassword = () => {
                             status!=='fullfilled' &&
                         <>
                         <motion.div whileHover={{y:-2}}>
-                            <TextField fullWidth sx={{mt:1}} {...register("email",{required:"Please enter a email",pattern:{value:/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,message:"Enter a valid email"}})} placeholder='Enter email'/>
+                            <TextField fullWidth sx={{mt:1}} {...register("email",{required:"Please enter a email",pattern:{value:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,message:"Enter a valid email"}})} placeholder='Enter email'/>
                             {errors.email && <FormHelperText sx={{fontSize:".9rem",mt:1}} error >{errors.email.message}</FormHelperText>}
                         </motion.div>
 
