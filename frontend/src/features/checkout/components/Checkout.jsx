@@ -32,6 +32,15 @@ export const Checkout = () => {
     const theme=useTheme()
     const is900=useMediaQuery(theme.breakpoints.down(900))
     const is480=useMediaQuery(theme.breakpoints.down(480))
+
+    // Coupon code state
+    const [couponInput, setCouponInput] = useState('')
+    const [appliedCoupon, setAppliedCoupon] = useState(null)
+    const [couponLoading, setCouponLoading] = useState(false)
+    const [couponMessage, setCouponMessage] = useState({ text: '', isError: false })
+
+    const discountAmount = appliedCoupon ? (orderTotal * appliedCoupon.discountPercentage) / 100 : 0
+    const finalOrderTotal = Math.max(0, orderTotal - discountAmount) + SHIPPING + TAXES
     
     useEffect(()=>{
         if(addressStatus==='fulfilled'){
@@ -54,8 +63,48 @@ export const Checkout = () => {
         dispatch(addAddressAsync(address))
     }
 
+    const handleApplyCoupon = async () => {
+        if (!couponInput.trim()) return
+        setCouponLoading(true)
+        setCouponMessage({ text: '', isError: false })
+        try {
+            const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8000'
+            const res = await fetch(`${baseUrl}/coupons/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponInput.trim() })
+            })
+            const data = await res.json()
+            if (res.ok && data.success) {
+                setAppliedCoupon(data)
+                setCouponMessage({ text: data.message, isError: false })
+            } else {
+                setAppliedCoupon(null)
+                setCouponMessage({ text: data.message || 'Invalid coupon code', isError: true })
+            }
+        } catch (err) {
+            setCouponMessage({ text: 'Error applying coupon, please try again', isError: true })
+        } finally {
+            setCouponLoading(false)
+        }
+    }
+
+    const handleRemoveCoupon = () => {
+        setAppliedCoupon(null)
+        setCouponInput('')
+        setCouponMessage({ text: '', isError: false })
+    }
+
     const handleCreateOrder=()=>{
-        const order={user:loggedInUser._id,item:cartItems,address:selectedAddress,paymentMode:selectedPaymentMethod,total:orderTotal+SHIPPING+TAXES}
+        const order={
+            user:loggedInUser._id,
+            item:cartItems,
+            address:selectedAddress,
+            paymentMode:selectedPaymentMethod,
+            total: Math.round(finalOrderTotal * 100) / 100,
+            coupon: appliedCoupon ? appliedCoupon.code : null,
+            discount: Math.round(discountAmount * 100) / 100
+        }
         dispatch(createOrderAsync(order))
     }
 
@@ -177,9 +226,67 @@ export const Checkout = () => {
         </Stack>
 
         {/* right box */}
-        <Stack  width={is900?'100%':'auto'} alignItems={is900?'flex-start':''}>
+        <Stack width={is900?'100%':'28rem'} alignItems={is900?'flex-start':''} spacing={2}>
             <Typography variant='h4'>Order summary</Typography>
             <Cart checkout={true}/>
+
+            {/* Promo / Coupon Code Section */}
+            <Paper elevation={1} sx={{ p: 2, width: '100%', borderRadius: 2 }}>
+                <Typography variant='subtitle1' fontWeight={600} mb={1}>🏷️ Have a Promo Code?</Typography>
+                
+                {appliedCoupon ? (
+                    <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} bgcolor={'#e8f5e9'} p={1.5} borderRadius={1}>
+                        <Box>
+                            <Typography fontWeight={600} color={'#2e7d32'}>Applied: {appliedCoupon.code}</Typography>
+                            <Typography variant='caption' color={'#2e7d32'}>{appliedCoupon.discountPercentage}% OFF (-${discountAmount.toFixed(2)})</Typography>
+                        </Box>
+                        <Button size='small' color='error' onClick={handleRemoveCoupon}>Remove</Button>
+                    </Stack>
+                ) : (
+                    <Stack spacing={1}>
+                        <Stack flexDirection={'row'} columnGap={1}>
+                            <TextField
+                                size='small'
+                                fullWidth
+                                placeholder='Enter CARTIFY50, WELCOME20'
+                                value={couponInput}
+                                onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                            />
+                            <LoadingButton
+                                variant='contained'
+                                size='small'
+                                loading={couponLoading}
+                                onClick={handleApplyCoupon}
+                                sx={{ minWidth: '80px' }}
+                            >
+                                Apply
+                            </LoadingButton>
+                        </Stack>
+                        {couponMessage.text && (
+                            <Typography variant='caption' color={couponMessage.isError ? 'error' : 'success.main'}>
+                                {couponMessage.text}
+                            </Typography>
+                        )}
+                        <Typography variant='caption' color='text.secondary'>
+                            Available codes: <b>CARTIFY50</b> (50% off), <b>WELCOME20</b> (20% off), <b>SAVE10</b> (10% off)
+                        </Typography>
+                    </Stack>
+                )}
+
+                {appliedCoupon && (
+                    <Box mt={2} pt={1} borderTop={'1px dashed #ccc'}>
+                        <Stack flexDirection={'row'} justifyContent={'space-between'}>
+                            <Typography color='success.main' fontWeight={500}>Coupon Discount ({appliedCoupon.discountPercentage}%)</Typography>
+                            <Typography color='success.main' fontWeight={500}>-${discountAmount.toFixed(2)}</Typography>
+                        </Stack>
+                        <Stack flexDirection={'row'} justifyContent={'space-between'} mt={1}>
+                            <Typography variant='h6' fontWeight={700}>Final Total</Typography>
+                            <Typography variant='h6' fontWeight={700} color='primary.main'>${finalOrderTotal.toFixed(2)}</Typography>
+                        </Stack>
+                    </Box>
+                )}
+            </Paper>
+
             <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={handleCreateOrder} size='large'>Pay and order</LoadingButton>
         </Stack>
 
