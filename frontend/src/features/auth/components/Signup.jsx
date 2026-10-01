@@ -35,7 +35,7 @@ export const Signup = () => {
   // handles signup error and toast them
   useEffect(()=>{
     if(error){
-      toast.error(error.message)
+      toast.error(error.message || (typeof error === 'string' ? error : "Signup failed, please try again"))
     }
   },[error])
 

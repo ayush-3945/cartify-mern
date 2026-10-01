@@ -34,7 +34,7 @@ export const Login = () => {
   // handles login error and toast them
   useEffect(()=>{
     if(error){
-      toast.error(error.message)
+      toast.error(error.message || (typeof error === 'string' ? error : "Login failed, please check your credentials"))
     }
   },[error])
 

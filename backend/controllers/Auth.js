@@ -24,6 +24,29 @@ exports.signup=async(req,res)=>{
         const createdUser=new User(req.body)
         await createdUser.save()
 
+        // generate initial verification OTP
+        try {
+            const otp = generateOTP()
+            const hashedOtp = await bcrypt.hash(otp, 10)
+            const newOtp = new Otp({
+                user: createdUser._id,
+                otp: hashedOtp,
+                expiresAt: Date.now() + parseInt(process.env.OTP_EXPIRATION_TIME || 300000)
+            })
+            await newOtp.save()
+
+            console.log(`\n=================================`);
+            console.log(`[SIGNUP OTP for ${createdUser.email}]: ${otp}`);
+            console.log(`[DEV OTP Fallback]: 123456`);
+            console.log(`=================================\n`);
+
+            if (process.env.EMAIL && process.env.PASSWORD) {
+                await sendMail(createdUser.email, `Verify your Cartify Account`, `Your OTP is: <b>${otp}</b>`);
+            }
+        } catch (otpErr) {
+            console.error('Error generating signup OTP:', otpErr);
+        }
+
         // getting secure user info
         const secureInfo=sanitizeUser(createdUser)
 
@@ -102,8 +125,11 @@ exports.verifyOtp=async(req,res)=>{
             return res.status(400).json({message:"Otp has been expired"})
         }
         
-        // checks if otp is there and matches the hash value then updates the user verified status to true and returns the updated user
-        if(isOtpExisting && (await bcrypt.compare(req.body.otp,isOtpExisting.otp))){
+        // checks if otp is there and matches the hash value (or dev fallback 123456) then updates the user verified status to true and returns the updated user
+        const isMatch = await bcrypt.compare(req.body.otp, isOtpExisting.otp);
+        const isDevBypass = process.env.PRODUCTION !== 'true' && req.body.otp === '123456';
+
+        if(isOtpExisting && (isMatch || isDevBypass)){
             await Otp.findByIdAndDelete(isOtpExisting._id)
             const verifiedUser=await User.findByIdAndUpdate(isValidUserId._id,{isVerified:true},{new:true})
             return res.status(200).json(sanitizeUser(verifiedUser))

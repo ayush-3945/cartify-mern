@@ -25,8 +25,26 @@ const server=express()
 connectToDB()
 
 
-// middlewares
-server.use(cors({origin:process.env.ORIGIN,credentials:true,exposedHeaders:['X-Total-Count'],methods:['GET','POST','PATCH','DELETE']}))
+// cors configuration supporting localhost, 127.0.0.1, and configured origin
+const allowedOrigins = [
+    process.env.ORIGIN,
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3001'
+].filter(Boolean);
+
+server.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin) || process.env.PRODUCTION !== 'true') {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    exposedHeaders: ['X-Total-Count'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+}))
 server.use(express.json())
 server.use(cookieParser())
 server.use(morgan("tiny"))
