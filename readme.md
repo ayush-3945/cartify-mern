@@ -1,99 +1,67 @@
-#  Cartify – Full-Stack E-commerce Website
+# 🛒 Cartify - Premium Full-Stack MERN E-Commerce Platform
 
-A complete, production-ready e-commerce web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js). It includes a user-friendly UI, secure JWT authentication, admin controls, shopping cart functionality, order tracking, and a responsive layout.
+[![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-v18.2-blue.svg)](https://reactjs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-v4.18-lightgrey.svg)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen.svg)](https://www.mongodb.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
-
-## Features
-
-* **User Authentication:** User Registration & Login with secure JWT Authentication & Bcrypt password hashing
-* **Admin Dashboard:** Full product management (Add / Edit / Delete products)
-* **Search & Filters:** Real-time product search, category filtering, and sorting
-* **Product Details:** Detailed product view with images, stock status, and specifications
-* **Shopping Cart & Checkout:** Dynamic cart management and streamlined checkout flow
-* **Order History:** User order tracking and status updates
-* **Protected Routes:** Role-based access control for Admins and Customers
-* **Responsive Design:** Optimized for Desktop, Tablet, and Mobile viewports
+A production-ready, feature-rich full-stack e-commerce web platform built with **MongoDB Atlas**, **Express.js**, **React 18**, and **Node.js**.
 
 ---
 
-## Tech Stack
+## ✨ Features
 
-### Frontend
-* **React.js** (v18)
-* **Redux Toolkit** (State Management)
-* **Material-UI (MUI)** & Emotion
-* **Framer Motion** & Lottie Animations
-* **React Router DOM** & Axios
-
-### Backend
-* **Node.js** & **Express.js**
-* **MongoDB Atlas** with **Mongoose ODM**
-* **JSON Web Tokens (JWT)** for stateless auth
-* **Bcrypt.js** for password encryption
-* **Nodemailer** for email notifications
+- 🛍️ **520+ Products Catalog:** Rich collection across 20 distinct categories and 35 top global brands.
+- 🔐 **Secure Authentication:** JWT authentication with HTTP-only cookies, password hashing with bcrypt, and OTP verification flow.
+- 🔍 **Dynamic Filtering & Search:** Category filters, brand filters, pagination, and multi-tier sorting (price high-to-low / low-to-high).
+- 🛒 **Interactive Cart & Wishlist:** Real-time quantity adjustments, wishlisting, and persistent state management via Redux Toolkit.
+- 💳 **Checkout & Orders:** Multi-step checkout with delivery address selection and order tracking.
+- 📱 **Fully Responsive UI:** Built with Material-UI (MUI), Framer Motion animations, and Lottie assets.
+- 🚀 **Cloud Deployments:** Frontend deployed on Vercel, Backend deployable on Render with full CORS support.
 
 ---
 
-## Getting Started
+## 🛠️ Technology Stack
 
-### 1. Clone the Repository
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18, Redux Toolkit, React Router v6, Material-UI (MUI), Framer Motion, Axios |
+| **Backend** | Node.js, Express.js, Mongoose ODM, JWT, Nodemailer, BcryptJS |
+| **Database** | MongoDB Atlas (Cloud) |
+| **Deployment** | Vercel (Frontend), Render / Vercel (Backend) |
 
-`ash
+---
+
+## 🚀 Quick Setup & Installation
+
+### 1. Clone the repository
+```bash
 git clone https://github.com/ayush-3945/cartify-mern.git
 cd cartify-mern
-`
+```
 
 ### 2. Backend Setup
-
-`ash
+```bash
 cd backend
 npm install
-`
-
-Create a .env file inside the ackend/ directory:
-
-`env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_jwt_key
-`
-
-Start the backend server:
-
-`ash
 npm run dev
-`
+```
 
 ### 3. Frontend Setup
-
-In a new terminal window:
-
-`ash
+```bash
 cd frontend
-npm install
-npm run start
-`
+npm install --legacy-peer-deps
+npm start
+```
+
+### 4. Seed 520+ Demo Products
+```bash
+cd backend
+node seed/seed500Products.js
+```
 
 ---
 
-## Future Enhancements
-
-* Integrated Payment Gateway (Razorpay / Stripe)
-* Product Ratings, Reviews & Image Uploads
-* User Wishlist & Saved Items
-* Automated SMS & Push Notifications
-
----
-
-## Contact & Author
-
-**Ayush Kumar Pandey**  
-* GitHub: [https://github.com/ayush-3945](https://github.com/ayush-3945)  
-* Email: [ayushpandey23042006@gmail.com](mailto:ayushpandey23042006@gmail.com)
-
----
-
-## License
-
-This project is open-source and licensed under the [MIT License](LICENSE).
+## 📄 License
+This project is open-source and available under the [MIT License](LICENSE).
