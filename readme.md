@@ -1,10 +1,10 @@
-# ?? Cartify – Full-Stack E-commerce Website
+#  Cartify â€“ Full-Stack E-commerce Website
 
 A complete, production-ready e-commerce web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js). It includes a user-friendly UI, secure JWT authentication, admin controls, shopping cart functionality, order tracking, and a responsive layout.
 
 ---
 
-## ? Features
+## Features
 
 * **User Authentication:** User Registration & Login with secure JWT Authentication & Bcrypt password hashing
 * **Admin Dashboard:** Full product management (Add / Edit / Delete products)
@@ -17,7 +17,7 @@ A complete, production-ready e-commerce web application built using the MERN sta
 
 ---
 
-## ??? Tech Stack
+## Tech Stack
 
 ### Frontend
 * **React.js** (v18)
@@ -35,7 +35,7 @@ A complete, production-ready e-commerce web application built using the MERN sta
 
 ---
 
-## ?? Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -77,7 +77,7 @@ npm run start
 
 ---
 
-## ?? Future Enhancements
+## Future Enhancements
 
 * Integrated Payment Gateway (Razorpay / Stripe)
 * Product Ratings, Reviews & Image Uploads
@@ -86,7 +86,7 @@ npm run start
 
 ---
 
-## ?? Contact & Author
+## Contact & Author
 
 **Ayush Kumar Pandey**  
 * GitHub: [https://github.com/ayush-3945](https://github.com/ayush-3945)  
@@ -94,6 +94,6 @@ npm run start
 
 ---
 
-## ?? License
+## License
 
 This project is open-source and licensed under the [MIT License](LICENSE).
