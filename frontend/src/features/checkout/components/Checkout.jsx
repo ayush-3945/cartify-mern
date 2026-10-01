@@ -109,187 +109,396 @@ export const Checkout = () => {
     }
 
   return (
-    <Stack flexDirection={'row'} p={2} rowGap={10} justifyContent={'center'} flexWrap={'wrap'} mb={'5rem'} mt={2} columnGap={4} alignItems={'flex-start'}>
+    <Box sx={{ maxWidth: '1280px', mx: 'auto', p: { xs: 2, md: 3 }, mb: 8, mt: 1 }}>
+        <Grid container spacing={4} alignItems="flex-start">
 
-        {/* left box */}
-        <Stack rowGap={4}>
+            {/* Left Column: Shipping & Payment Information */}
+            <Grid item xs={12} md={7} lg={7.5}>
+                <Stack spacing={3}>
 
-            {/* heading */}
-            <Stack flexDirection={'row'} columnGap={is480?0.3:1} alignItems={'center'}>
-                <motion.div  whileHover={{x:-5}}>
-                    <IconButton component={Link} to={"/cart"}><ArrowBackIcon fontSize={is480?"medium":'large'}/></IconButton>
-                </motion.div>
-                <Typography variant='h4'>Shipping Information</Typography>
-            </Stack>
-
-            {/* address form */}
-            <Stack component={'form'} noValidate rowGap={2} onSubmit={handleSubmit(handleAddAddress)}>
-                    <Stack>
-                        <Typography  gutterBottom>Type</Typography>
-                        <TextField placeholder='Eg. Home, Buisness' {...register("type",{required:true})}/>
-                    </Stack>
-
-
-                    <Stack>
-                        <Typography gutterBottom>Street</Typography>
-                        <TextField {...register("street",{required:true})}/>
-                    </Stack>
-
-                    <Stack>
-                        <Typography gutterBottom>Country</Typography>
-                        <TextField {...register("country",{required:true})}/>
-                    </Stack>
-
-                    <Stack>
-                        <Typography  gutterBottom>Phone Number</Typography>
-                        <TextField type='number' {...register("phoneNumber",{required:true})}/>
-                    </Stack>
-
-                    <Stack flexDirection={'row'}>
-                        <Stack width={'100%'}>
-                            <Typography gutterBottom>City</Typography>
-                            <TextField  {...register("city",{required:true})}/>
-                        </Stack>
-                        <Stack width={'100%'}>
-                            <Typography gutterBottom>State</Typography>
-                            <TextField  {...register("state",{required:true})}/>
-                        </Stack>
-                        <Stack width={'100%'}>
-                            <Typography gutterBottom>Postal Code</Typography>
-                            <TextField type='number' {...register("postalCode",{required:true})}/>
-                        </Stack>
-                    </Stack>
-
-                    <Stack flexDirection={'row'} alignSelf={'flex-end'} columnGap={1}>
-                        <LoadingButton loading={status==='pending'} type='submit' variant='contained'>add</LoadingButton>
-                        <Button color='error' variant='outlined' onClick={()=>reset()}>Reset</Button>
-                    </Stack>
-            </Stack>
-
-            {/* existing address */}
-            <Stack rowGap={3}>
-
-                <Stack>
-                    <Typography variant='h6'>Address</Typography>
-                    <Typography variant='body2' color={'text.secondary'}>Choose from existing Addresses</Typography>
-                </Stack>
-
-                <Grid container gap={2} width={is900?"auto":'50rem'} justifyContent={'flex-start'} alignContent={'flex-start'}>
-                        {
-                            addresses.map((address,index)=>(
-                                <FormControl item >
-                                    <Stack key={address._id} p={is480?2:2} width={is480?'100%':'20rem'} height={is480?'auto':'15rem'}  rowGap={2} component={is480?Paper:Paper} elevation={1}>
-
-                                        <Stack flexDirection={'row'} alignItems={'center'}>
-                                            <Radio checked={selectedAddress===address} name='addressRadioGroup' value={selectedAddress} onChange={(e)=>setSelectedAddress(addresses[index])}/>
-                                            <Typography>{address.type}</Typography>
-                                        </Stack>
-
-                                        {/* details */}
-                                        <Stack>
-                                            <Typography>{address.street}</Typography>
-                                            <Typography>{address.state}, {address.city}, {address.country}, {address.postalCode}</Typography>
-                                            <Typography>{address.phoneNumber}</Typography>
-                                        </Stack>
-                                    </Stack>
-                                </FormControl>
-                            ))
-                        }
-                </Grid>
-
-            </Stack>
-            
-            {/* payment methods */}
-            <Stack rowGap={3}>
-
-                    <Stack>
-                        <Typography variant='h6'>Payment Methods</Typography>
-                        <Typography variant='body2' color={'text.secondary'}>Please select a payment method</Typography>
-                    </Stack>
-                    
-                    <Stack rowGap={2}>
-
-                        <Stack flexDirection={'row'} justifyContent={'flex-start'} alignItems={'center'}>
-                            <Radio value={selectedPaymentMethod} name='paymentMethod' checked={selectedPaymentMethod==='COD'} onChange={()=>setSelectedPaymentMethod('COD')}/>
-                            <Typography>Cash</Typography>
-                        </Stack>
-
-                        <Stack flexDirection={'row'} justifyContent={'flex-start'} alignItems={'center'}>
-                            <Radio value={selectedPaymentMethod} name='paymentMethod' checked={selectedPaymentMethod==='CARD'} onChange={()=>setSelectedPaymentMethod('CARD')}/>
-                            <Typography>Card</Typography>
-                        </Stack>
-
-                    </Stack>
-
-
-            </Stack>
-        </Stack>
-
-        {/* right box */}
-        <Stack width={is900?'100%':'28rem'} alignItems={is900?'flex-start':''} spacing={2}>
-            <Typography variant='h4'>Order summary</Typography>
-            <Cart checkout={true}/>
-
-            {/* Promo / Coupon Code Section */}
-            <Paper elevation={1} sx={{ p: 2, width: '100%', borderRadius: 2 }}>
-                <Typography variant='subtitle1' fontWeight={600} mb={1}>🏷️ Have a Promo Code?</Typography>
-                
-                {appliedCoupon ? (
-                    <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} bgcolor={'#e8f5e9'} p={1.5} borderRadius={1}>
-                        <Box>
-                            <Typography fontWeight={600} color={'#2e7d32'}>Applied: {appliedCoupon.code}</Typography>
-                            <Typography variant='caption' color={'#2e7d32'}>{appliedCoupon.discountPercentage}% OFF (-${discountAmount.toFixed(2)})</Typography>
-                        </Box>
-                        <Button size='small' color='error' onClick={handleRemoveCoupon}>Remove</Button>
-                    </Stack>
-                ) : (
-                    <Stack spacing={1}>
-                        <Stack flexDirection={'row'} columnGap={1}>
-                            <TextField
-                                size='small'
-                                fullWidth
-                                placeholder='Enter CARTIFY50, WELCOME20'
-                                value={couponInput}
-                                onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                            />
-                            <LoadingButton
-                                variant='contained'
-                                size='small'
-                                loading={couponLoading}
-                                onClick={handleApplyCoupon}
-                                sx={{ minWidth: '80px' }}
-                            >
-                                Apply
-                            </LoadingButton>
-                        </Stack>
-                        {couponMessage.text && (
-                            <Typography variant='caption' color={couponMessage.isError ? 'error' : 'success.main'}>
-                                {couponMessage.text}
-                            </Typography>
-                        )}
-                        <Typography variant='caption' color='text.secondary'>
-                            Available codes: <b>CARTIFY50</b> (50% off), <b>WELCOME20</b> (20% off), <b>SAVE10</b> (10% off)
+                    {/* Page Heading */}
+                    <Stack flexDirection={'row'} alignItems={'center'} columnGap={1}>
+                        <motion.div whileHover={{ x: -4 }}>
+                            <IconButton component={Link} to={"/cart"} sx={{ p: 1 }}>
+                                <ArrowBackIcon fontSize={is480 ? "medium" : 'large'} />
+                            </IconButton>
+                        </motion.div>
+                        <Typography variant={is480 ? 'h5' : 'h4'} fontWeight={700}>
+                            Shipping Information
                         </Typography>
                     </Stack>
-                )}
 
-                {appliedCoupon && (
-                    <Box mt={2} pt={1} borderTop={'1px dashed #ccc'}>
-                        <Stack flexDirection={'row'} justifyContent={'space-between'}>
-                            <Typography color='success.main' fontWeight={500}>Coupon Discount ({appliedCoupon.discountPercentage}%)</Typography>
-                            <Typography color='success.main' fontWeight={500}>-${discountAmount.toFixed(2)}</Typography>
+                    {/* Address Form Card */}
+                    <Paper elevation={1} sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3, bgcolor: 'background.paper' }}>
+                        <Typography variant='h6' fontWeight={600} mb={0.5}>
+                            Add New Address
+                        </Typography>
+                        <Typography variant='body2' color='text.secondary' mb={2.5}>
+                            Enter your delivery address details below
+                        </Typography>
+
+                        <Box component={'form'} noValidate onSubmit={handleSubmit(handleAddAddress)}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        ADDRESS TYPE
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        placeholder='e.g. Home, Office, Business'
+                                        {...register("type", { required: "Address type is required" })}
+                                        error={Boolean(errors.type)}
+                                        helperText={errors.type?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        STREET ADDRESS
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        placeholder='Street name, flat, house no.'
+                                        {...register("street", { required: "Street is required" })}
+                                        error={Boolean(errors.street)}
+                                        helperText={errors.street?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        COUNTRY
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        placeholder='e.g. India, United States'
+                                        {...register("country", { required: "Country is required" })}
+                                        error={Boolean(errors.country)}
+                                        helperText={errors.country?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        PHONE NUMBER
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        type='tel'
+                                        placeholder='10-digit mobile number'
+                                        {...register("phoneNumber", { required: "Phone number is required" })}
+                                        error={Boolean(errors.phoneNumber)}
+                                        helperText={errors.phoneNumber?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={4}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        CITY
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        placeholder='City'
+                                        {...register("city", { required: "City is required" })}
+                                        error={Boolean(errors.city)}
+                                        helperText={errors.city?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={4}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        STATE
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        placeholder='State'
+                                        {...register("state", { required: "State is required" })}
+                                        error={Boolean(errors.state)}
+                                        helperText={errors.state?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={4}>
+                                    <Typography variant='caption' fontWeight={600} color='text.secondary' gutterBottom display="block">
+                                        POSTAL CODE
+                                    </Typography>
+                                    <TextField
+                                        size='small'
+                                        fullWidth
+                                        type='number'
+                                        placeholder='Postal Code / PIN'
+                                        {...register("postalCode", { required: "Postal code is required" })}
+                                        error={Boolean(errors.postalCode)}
+                                        helperText={errors.postalCode?.message}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <Stack flexDirection={'row'} justifyContent={'flex-end'} columnGap={1.5} mt={1}>
+                                        <Button color='inherit' variant='outlined' onClick={() => reset()} sx={{ textTransform: 'none' }}>
+                                            Reset Form
+                                        </Button>
+                                        <LoadingButton loading={addressStatus === 'pending'} type='submit' variant='contained' sx={{ textTransform: 'none', px: 3 }}>
+                                            Save Address
+                                        </LoadingButton>
+                                    </Stack>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Paper>
+
+                    {/* Existing Addresses Section */}
+                    {addresses.length > 0 && (
+                        <Paper elevation={1} sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3, bgcolor: 'background.paper' }}>
+                            <Typography variant='h6' fontWeight={600} mb={0.5}>
+                                Choose from Saved Addresses
+                            </Typography>
+                            <Typography variant='body2' color='text.secondary' mb={2}>
+                                Select where you would like this order to be delivered
+                            </Typography>
+
+                            <Grid container spacing={2}>
+                                {addresses.map((address, index) => {
+                                    const isSelected = selectedAddress?._id === address._id;
+                                    return (
+                                        <Grid item xs={12} sm={6} key={address._id}>
+                                            <Paper
+                                                elevation={0}
+                                                onClick={() => setSelectedAddress(addresses[index])}
+                                                sx={{
+                                                    p: 2,
+                                                    borderRadius: 2.5,
+                                                    cursor: 'pointer',
+                                                    border: `2px solid ${isSelected ? theme.palette.primary.main : theme.palette.divider}`,
+                                                    bgcolor: isSelected 
+                                                        ? (theme.palette.mode === 'dark' ? '#2a1a1a' : '#fff5f5') 
+                                                        : 'background.paper',
+                                                    transition: 'all 0.2s ease',
+                                                    '&:hover': {
+                                                        borderColor: theme.palette.primary.main
+                                                    }
+                                                }}
+                                            >
+                                                <Stack flexDirection={'row'} alignItems={'center'} columnGap={1} mb={0.5}>
+                                                    <Radio
+                                                        checked={isSelected}
+                                                        name='addressRadioGroup'
+                                                        value={address._id}
+                                                        onChange={() => setSelectedAddress(addresses[index])}
+                                                        size='small'
+                                                        sx={{ p: 0.5 }}
+                                                    />
+                                                    <Typography fontWeight={700} fontSize={'0.95rem'}>
+                                                        {address.type}
+                                                    </Typography>
+                                                </Stack>
+
+                                                <Box sx={{ pl: 3.5 }}>
+                                                    <Typography variant='body2' color='text.primary' fontWeight={500}>
+                                                        {address.street}
+                                                    </Typography>
+                                                    <Typography variant='caption' color='text.secondary' display='block'>
+                                                        {address.city}, {address.state} {address.postalCode}
+                                                    </Typography>
+                                                    <Typography variant='caption' color='text.secondary' display='block'>
+                                                        {address.country} • Phone: {address.phoneNumber}
+                                                    </Typography>
+                                                </Box>
+                                            </Paper>
+                                        </Grid>
+                                    );
+                                })}
+                            </Grid>
+                        </Paper>
+                    )}
+
+                    {/* Payment Methods Card */}
+                    <Paper elevation={1} sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3, bgcolor: 'background.paper' }}>
+                        <Typography variant='h6' fontWeight={600} mb={0.5}>
+                            Payment Method
+                        </Typography>
+                        <Typography variant='body2' color='text.secondary' mb={2}>
+                            Select your preferred payment mode
+                        </Typography>
+
+                        <Stack spacing={1.5}>
+                            <Paper
+                                elevation={0}
+                                onClick={() => setSelectedPaymentMethod('COD')}
+                                sx={{
+                                    p: 1.5,
+                                    borderRadius: 2,
+                                    cursor: 'pointer',
+                                    border: `1.5px solid ${selectedPaymentMethod === 'COD' ? theme.palette.primary.main : theme.palette.divider}`,
+                                    bgcolor: selectedPaymentMethod === 'COD' 
+                                        ? (theme.palette.mode === 'dark' ? '#2a1a1a' : '#fff5f5') 
+                                        : 'background.paper',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    columnGap: 1.5
+                                }}
+                            >
+                                <Radio
+                                    checked={selectedPaymentMethod === 'COD'}
+                                    name='paymentMethod'
+                                    value='COD'
+                                    onChange={() => setSelectedPaymentMethod('COD')}
+                                    size='small'
+                                    sx={{ p: 0.5 }}
+                                />
+                                <Box>
+                                    <Typography fontWeight={600}>💵 Cash on Delivery (COD)</Typography>
+                                    <Typography variant='caption' color='text.secondary'>Pay with cash upon receipt of order</Typography>
+                                </Box>
+                            </Paper>
+
+                            <Paper
+                                elevation={0}
+                                onClick={() => setSelectedPaymentMethod('CARD')}
+                                sx={{
+                                    p: 1.5,
+                                    borderRadius: 2,
+                                    cursor: 'pointer',
+                                    border: `1.5px solid ${selectedPaymentMethod === 'CARD' ? theme.palette.primary.main : theme.palette.divider}`,
+                                    bgcolor: selectedPaymentMethod === 'CARD' 
+                                        ? (theme.palette.mode === 'dark' ? '#2a1a1a' : '#fff5f5') 
+                                        : 'background.paper',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    columnGap: 1.5
+                                }}
+                            >
+                                <Radio
+                                    checked={selectedPaymentMethod === 'CARD'}
+                                    name='paymentMethod'
+                                    value='CARD'
+                                    onChange={() => setSelectedPaymentMethod('CARD')}
+                                    size='small'
+                                    sx={{ p: 0.5 }}
+                                />
+                                <Box>
+                                    <Typography fontWeight={600}>💳 Credit / Debit Card</Typography>
+                                    <Typography variant='caption' color='text.secondary'>Instant payment simulation (Test Card)</Typography>
+                                </Box>
+                            </Paper>
                         </Stack>
-                        <Stack flexDirection={'row'} justifyContent={'space-between'} mt={1}>
-                            <Typography variant='h6' fontWeight={700}>Final Total</Typography>
-                            <Typography variant='h6' fontWeight={700} color='primary.main'>${finalOrderTotal.toFixed(2)}</Typography>
-                        </Stack>
-                    </Box>
-                )}
-            </Paper>
+                    </Paper>
 
-            <LoadingButton fullWidth loading={orderStatus==='pending'} variant='contained' onClick={handleCreateOrder} size='large'>Pay and order</LoadingButton>
-        </Stack>
+                </Stack>
+            </Grid>
 
-    </Stack>
+            {/* Right Column: Order Summary & Promo Code */}
+            <Grid item xs={12} md={5} lg={4.5}>
+                <Box sx={{ position: { md: 'sticky' }, top: '90px' }}>
+                    <Paper elevation={1} sx={{ p: { xs: 2, sm: 3 }, borderRadius: 3, bgcolor: 'background.paper' }}>
+                        <Typography variant='h5' fontWeight={700} mb={2}>
+                            Order Summary
+                        </Typography>
+
+                        {/* Cart items list */}
+                        <Cart checkout={true} />
+
+                        {/* Promo / Coupon Code Section */}
+                        <Box sx={{ mt: 3, pt: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
+                            <Typography variant='subtitle2' fontWeight={700} mb={1}>
+                                🏷️ Have a Promo Code?
+                            </Typography>
+
+                            {appliedCoupon ? (
+                                <Stack
+                                    flexDirection={'row'}
+                                    justifyContent={'space-between'}
+                                    alignItems={'center'}
+                                    sx={{
+                                        bgcolor: theme.palette.mode === 'dark' ? '#1b2e1e' : '#e8f5e9',
+                                        p: 1.5,
+                                        borderRadius: 2,
+                                        border: '1px solid #81c784'
+                                    }}
+                                >
+                                    <Box>
+                                        <Typography fontWeight={700} color={'#2e7d32'}>
+                                            Applied: {appliedCoupon.code}
+                                        </Typography>
+                                        <Typography variant='caption' color={'#2e7d32'} fontWeight={600}>
+                                            {appliedCoupon.discountPercentage}% OFF (-${discountAmount.toFixed(2)})
+                                        </Typography>
+                                    </Box>
+                                    <Button size='small' color='error' onClick={handleRemoveCoupon} sx={{ textTransform: 'none', fontWeight: 600 }}>
+                                        Remove
+                                    </Button>
+                                </Stack>
+                            ) : (
+                                <Stack spacing={1}>
+                                    <Stack flexDirection={'row'} columnGap={1}>
+                                        <TextField
+                                            size='small'
+                                            fullWidth
+                                            placeholder='e.g. CARTIFY50'
+                                            value={couponInput}
+                                            onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                                        />
+                                        <LoadingButton
+                                            variant='contained'
+                                            size='small'
+                                            loading={couponLoading}
+                                            onClick={handleApplyCoupon}
+                                            sx={{ minWidth: '80px', textTransform: 'none' }}
+                                        >
+                                            Apply
+                                        </LoadingButton>
+                                    </Stack>
+
+                                    {couponMessage.text && (
+                                        <Typography variant='caption' color={couponMessage.isError ? 'error' : 'success.main'} fontWeight={500}>
+                                            {couponMessage.text}
+                                        </Typography>
+                                    )}
+
+                                    <Typography variant='caption' color='text.secondary'>
+                                        Available: <b>CARTIFY50</b> (50%), <b>WELCOME20</b> (20%), <b>SAVE10</b> (10%)
+                                    </Typography>
+                                </Stack>
+                            )}
+
+                            {appliedCoupon && (
+                                <Box mt={2} pt={1.5} borderTop={`1px dashed ${theme.palette.divider}`}>
+                                    <Stack flexDirection={'row'} justifyContent={'space-between'} color='success.main'>
+                                        <Typography variant='body2' fontWeight={600}>Coupon Discount ({appliedCoupon.discountPercentage}%)</Typography>
+                                        <Typography variant='body2' fontWeight={700}>-${discountAmount.toFixed(2)}</Typography>
+                                    </Stack>
+                                    <Stack flexDirection={'row'} justifyContent={'space-between'} mt={1}>
+                                        <Typography variant='h6' fontWeight={700}>Grand Total</Typography>
+                                        <Typography variant='h6' fontWeight={800} color='primary.main'>${finalOrderTotal.toFixed(2)}</Typography>
+                                    </Stack>
+                                </Box>
+                            )}
+                        </Box>
+
+                        {/* Pay and Order Button */}
+                        <Box mt={3}>
+                            <LoadingButton
+                                fullWidth
+                                loading={orderStatus === 'pending'}
+                                variant='contained'
+                                onClick={handleCreateOrder}
+                                size='large'
+                                sx={{ py: 1.5, fontSize: '1rem', fontWeight: 700, borderRadius: 2, textTransform: 'none' }}
+                            >
+                                Pay & Place Order (${finalOrderTotal.toFixed(2)})
+                            </LoadingButton>
+                        </Box>
+                    </Paper>
+                </Box>
+            </Grid>
+
+        </Grid>
+    </Box>
   )
 }

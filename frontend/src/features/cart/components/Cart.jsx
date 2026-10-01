@@ -48,46 +48,46 @@ export const Cart = ({checkout}) => {
     },[])
 
   return (
-    <Stack justifyContent={'flex-start'} alignItems={'center'} mb={'5rem'} >
+    <Stack justifyContent={'flex-start'} alignItems={'center'} mb={checkout ? 0 : '5rem'} width={'100%'}>
 
-        <Stack width={is900?'auto':'50rem'} mt={'3rem'} paddingLeft={checkout?0:2} paddingRight={checkout?0:2} rowGap={4} >
+        <Stack width={checkout ? '100%' : (is900 ? '100%' : '50rem')} mt={checkout ? 0 : '3rem'} paddingLeft={checkout?0:2} paddingRight={checkout?0:2} rowGap={checkout ? 2 : 4} >
 
             {/* cart items */}
-            <Stack rowGap={2}>
+            <Stack rowGap={1.5}>
             {
                 items && items.map((item)=>(
-                    <CartItem key={item._id} id={item._id} title={item.product.title} brand={item.product.brand.name} category={item.product.category.name} price={item.product.price} quantity={item.quantity} thumbnail={item.product.thumbnail} stockQuantity={item.product.stockQuantity} productId={item.product._id}/>
+                    <CartItem key={item._id} id={item._id} title={item.product.title} brand={item.product.brand.name} category={item.product.category.name} price={item.product.price} quantity={item.quantity} thumbnail={item.product.thumbnail} stockQuantity={item.product.stockQuantity} productId={item.product._id} checkout={checkout}/>
                 ))
             }
             </Stack>
             
             {/* subtotal */}
-            <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} width={'100%'}>
 
                 {
                     checkout?(
-                        <Stack rowGap={2} width={'100%'}>
+                        <Stack rowGap={1.5} width={'100%'} pt={1}>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
-                                <Typography>Subtotal</Typography>
-                                <Typography>${subtotal}</Typography>
+                                <Typography color='text.secondary'>Subtotal</Typography>
+                                <Typography fontWeight={500}>${subtotal.toFixed(2)}</Typography>
                             </Stack>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
-                                <Typography>Shipping</Typography>
-                                <Typography>${SHIPPING}</Typography>
+                                <Typography color='text.secondary'>Shipping</Typography>
+                                <Typography fontWeight={500}>${SHIPPING.toFixed(2)}</Typography>
                             </Stack>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
-                                <Typography>Taxes</Typography>
-                                <Typography>${TAXES}</Typography> 
+                                <Typography color='text.secondary'>Taxes</Typography>
+                                <Typography fontWeight={500}>${TAXES.toFixed(2)}</Typography> 
                             </Stack>
 
-                            <hr/>
+                            <hr style={{ border: 'none', borderTop: `1px solid ${theme.palette.divider}`, margin: '4px 0' }}/>
 
                             <Stack flexDirection={'row'} justifyContent={'space-between'}>
-                                <Typography>Total</Typography>
-                                <Typography>${subtotal+SHIPPING+TAXES}</Typography>
+                                <Typography variant='subtitle1' fontWeight={600}>Total</Typography>
+                                <Typography variant='subtitle1' fontWeight={700}>${(subtotal+SHIPPING+TAXES).toFixed(2)}</Typography>
                             </Stack>
                             
 
