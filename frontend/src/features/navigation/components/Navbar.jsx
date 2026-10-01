@@ -17,7 +17,10 @@ import { selectLoggedInUser } from '../../auth/AuthSlice';
 import { selectWishlistItems } from '../../wishlist/WishlistSlice';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TuneIcon from '@mui/icons-material/Tune';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { selectProductIsFilterOpen, toggleFilters } from '../../products/ProductSlice';
+import { useThemeMode } from '../../../theme/ThemeContext';
 
 
 
@@ -31,6 +34,7 @@ export const Navbar=({isProductList=false})=> {
   const dispatch=useDispatch()
   const theme=useTheme()
   const is480=useMediaQuery(theme.breakpoints.down(480))
+  const { mode, toggleTheme } = useThemeMode()
 
   const wishlistItems=useSelector(selectWishlistItems)
   const isProductFilterOpen=useSelector(selectProductIsFilterOpen)
@@ -55,7 +59,7 @@ export const Navbar=({isProductList=false})=> {
   ];
 
   return (
-    <AppBar position="sticky" sx={{backgroundColor:"white",boxShadow:"none",color:"text.primary"}}>
+    <AppBar position="sticky" sx={{backgroundColor:theme.palette.background.paper,boxShadow:"none",color:"text.primary",borderBottom:`1px solid ${mode==='dark'?'#2e2e2e':'#f0f0f0'}`}}>
         <Toolbar sx={{p:1,height:"4rem",display:"flex",justifyContent:"space-around"}}>
 
           <Typography variant="h6" noWrap component="a" href="/" sx={{ mr: 2, display: { xs: 'none', md: 'flex' },fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', }}>
@@ -124,8 +128,14 @@ export const Navbar=({isProductList=false})=> {
                   </Stack>
             }
             {
-              isProductList && <IconButton onClick={handleToggleFilters}><TuneIcon sx={{color:isProductFilterOpen?"black":""}}/></IconButton>
+              isProductList && <IconButton onClick={handleToggleFilters}><TuneIcon sx={{color:isProductFilterOpen?"primary.main":""}}/></IconButton>
             }
+
+            <Tooltip title={`Switch to ${mode === 'dark' ? 'Light' : 'Dark'} Mode`}>
+              <IconButton onClick={toggleTheme} sx={{ color: 'text.primary' }}>
+                {mode === 'dark' ? <LightModeOutlinedIcon sx={{ color: '#ffd54f' }} /> : <DarkModeOutlinedIcon />}
+              </IconButton>
+            </Tooltip>
             
             </Stack>
           </Stack>
