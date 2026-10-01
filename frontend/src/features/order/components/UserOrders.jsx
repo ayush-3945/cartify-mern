@@ -9,7 +9,9 @@ import Lottie from 'lottie-react'
 import { loadingAnimation, noOrdersAnimation } from '../../../assets'
 import { toast } from 'react-toastify'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import {motion} from 'framer-motion'
+import { downloadInvoice } from '../../../utils/generateInvoice';
 
 
 export const UserOrders = () => {
@@ -124,8 +126,17 @@ export const UserOrders = () => {
                                             </Stack>
                                         </Stack>
 
-                                        <Stack>
-                                            <Typography>Item: {order.item.length}</Typography>
+                                        <Stack flexDirection={'row'} alignItems={'center'} columnGap={2}>
+                                            <Typography color={'text.secondary'}>Items: {order.item.length}</Typography>
+                                            <Button
+                                                size='small'
+                                                variant='outlined'
+                                                startIcon={<ReceiptLongOutlinedIcon />}
+                                                onClick={() => downloadInvoice(order)}
+                                                sx={{ textTransform: 'none', borderRadius: 1.5 }}
+                                            >
+                                                Invoice (PDF)
+                                            </Button>
                                         </Stack>
                                     </Stack>
 
