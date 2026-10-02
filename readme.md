@@ -13,10 +13,15 @@ A production-ready, feature-rich full-stack e-commerce web platform built with *
 ## ✨ Features
 
 - 🛍️ **520+ Products Catalog:** Rich collection across 20 distinct categories and 35 top global brands.
+- 🎟️ **Promo & Coupon Engine:** Instant discount calculation with active codes (`CARTIFY50`, `WELCOME20`, `SAVE10`) at checkout.
+- 🧾 **Order Invoice PDF Generation:** One-click downloadable and printable tax invoice PDFs for completed orders.
+- 📊 **Real-Time Admin Analytics:** Live sales revenue tracker, order metrics, and category inventory distribution charts.
+- 🌓 **Dark / Light Theme Toggle:** Customizable MUI themes with persistent local storage preferences.
 - 🔐 **Secure Authentication:** JWT authentication with HTTP-only cookies, password hashing with bcrypt, and OTP verification flow.
-- 🔍 **Dynamic Filtering & Search:** Category filters, brand filters, pagination, and multi-tier sorting (price high-to-low / low-to-high).
+- 🔍 **Dynamic Filtering & Search:** Category filters, brand filters, pagination, and multi-tier sorting.
 - 🛒 **Interactive Cart & Wishlist:** Real-time quantity adjustments, wishlisting, and persistent state management via Redux Toolkit.
-- 💳 **Checkout & Orders:** Multi-step checkout with delivery address selection and order tracking.
+- 💳 **Checkout & Orders:** Modern responsive 2-column checkout with delivery address selection and order tracking.
+- 🏥 **Health & Uptime Monitoring:** Dedicated `/health` endpoint for monitoring backend service health and uptime.
 - 📱 **Fully Responsive UI:** Built with Material-UI (MUI), Framer Motion animations, and Lottie assets.
 - 🚀 **Cloud Deployments:** Frontend deployed on Vercel, Backend deployable on Render with full CORS support.
 

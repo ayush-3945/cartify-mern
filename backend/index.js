@@ -69,6 +69,16 @@ server.get("/",(req,res)=>{
     res.status(200).json({message:'running'})
 })
 
+server.get("/health",(req,res)=>{
+    res.status(200).json({
+        status:"healthy",
+        service:"Cartify E-Commerce API",
+        uptime:`${Math.floor(process.uptime())}s`,
+        timestamp:new Date().toISOString(),
+        environment:process.env.PRODUCTION==='true'?'production':'development'
+    })
+})
+
 const PORT = process.env.PORT || 8000
 server.listen(PORT,()=>{
     console.log(`server [STARTED] ~ http://localhost:${PORT}`);
